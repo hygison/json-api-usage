@@ -41,7 +41,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "json-api-nestjs": "^7.0.4",
+    "json-api-nestjs": "^8.0.0",
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.15",
     "pg": "^8.13.0",
