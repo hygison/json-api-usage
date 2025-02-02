@@ -1,6 +1,6 @@
-import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-export class CoreEntity {
+export class CoreEntity extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   readonly id?: string;
 

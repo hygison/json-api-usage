@@ -6,7 +6,7 @@ import { AppController } from '@/controllers/app.controller';
 import { AppService } from '@/services/app.service';
 import appConfig from '@/config/app.config';
 import { UserController } from '@/controllers/user.controller';
-import { Simple } from '@/database/entities/simple.entity';
+import { Trip } from '@/database/entities/trip.entity';
 import { User } from '@/database/entities/user.entity';
 import { Wallet } from '@/database/entities/wallet.entity';
 import { DatabaseModule } from '@/modules/database.module';
@@ -21,7 +21,7 @@ import { ErrorInterceptor } from '@/interceptors/error.interceptor';
     }),
     HttpModule,
     JsonApiModule.forRoot({
-      entities: [User, Wallet, Simple],
+      entities: [User, Wallet, Trip],
       controllers: [UserController],
       providers: [Logger],
       imports: [DatabaseModule],

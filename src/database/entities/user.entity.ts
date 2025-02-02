@@ -4,6 +4,7 @@ import { isNil } from 'lodash';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { Wallet } from '@/database/entities/wallet.entity';
 import { CoreEntity } from '@/database/helpers/core-entity';
+import { Trip } from './trip.entity';
 
 @Entity()
 export class User extends CoreEntity {
@@ -32,6 +33,9 @@ export class User extends CoreEntity {
 
   @OneToMany(() => Wallet, (e) => e.user, { cascade: true, onDelete: 'NO ACTION', nullable: true })
   wallets?: Wallet[] | null;
+
+  @OneToMany(() => Trip, (e) => e.traveler, { cascade: true, onDelete: 'NO ACTION', nullable: true })
+  trips?: Trip[] | null;
 
   @BeforeInsert()
   @BeforeUpdate()
