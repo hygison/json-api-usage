@@ -2,15 +2,16 @@ import { HttpModule } from '@nestjs/axios';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JsonApiModule } from 'json-api-nestjs';
-import { AppController } from '@/app.controller';
-import { AppService } from '@/app.service';
+import { AppController } from '@/controllers/app.controller';
+import { AppService } from '@/services/app.service';
 import appConfig from '@/config/app.config';
 import { UserController } from '@/controllers/user.controller';
-import { WalletController } from '@/controllers/wallet.controller';
 import { Simple } from '@/database/entities/simple.entity';
 import { User } from '@/database/entities/user.entity';
 import { Wallet } from '@/database/entities/wallet.entity';
-import { DatabaseModule } from '@/database.module';
+import { DatabaseModule } from '@/modules/database.module';
+import { APP_FILTER } from '@nestjs/core';
+import { ErrorInterceptor } from '@/interceptors/error.interceptor';
 
 @Module({
   imports: [
@@ -21,17 +22,24 @@ import { DatabaseModule } from '@/database.module';
     HttpModule,
     JsonApiModule.forRoot({
       entities: [User, Wallet, Simple],
-      controllers: [UserController, WalletController],
+      controllers: [UserController],
       providers: [Logger],
       imports: [DatabaseModule],
       options: {
         debug: true,
         requiredSelectField: false,
-        operationUrl: 'operation',
+        useSoftDelete: true,
       },
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ErrorInterceptor,
+    },
+    AppService,
+    Logger,
+  ],
 })
 export class AppModule {}

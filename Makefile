@@ -19,6 +19,6 @@ destroy:
 	rm -rf Docker/database
 .PHONY:destroy
 
-psql:
-	docker exec -it ${DB_CONTAINER} psql -U ${DB_USER} -d ${DB_NAME} -W
-.PHONY: psql
+sql:
+	docker exec -it ${DB_CONTAINER} env PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USER} -d ${DB_NAME}
+.PHONY: sql

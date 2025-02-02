@@ -3,13 +3,13 @@ import { join } from 'path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-const port = Number(process.env.DB_PORT);
 const isDevelopment = true;
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
-  port: port,
+  port: Number(process.env.DB_PORT),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
@@ -18,16 +18,10 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   synchronize: true,
   logging: true,
   logger: 'file',
-  maxQueryExecutionTime: 1000,
+  maxQueryExecutionTime: 1500,
   retryAttempts: 10,
-  retryDelay: 3000,
-  ...(isDevelopment
-    ? {}
-    : {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      }),
+  retryDelay: 5000,
+  namingStrategy: new SnakeNamingStrategy(),
 };
 
 export const AppDataSource = new DataSource(<PostgresConnectionOptions>typeOrmConfig);

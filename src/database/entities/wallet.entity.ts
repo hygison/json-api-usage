@@ -10,11 +10,11 @@ export class Wallet extends CoreEntity {
     Object.assign(this, obj);
   }
 
-  @Column({ type: 'bigint', unsigned: true, name: 'user_id' })
+  @Column({ type: 'bigint', unsigned: true })
   userId: string;
 
   @ManyToOne(() => User, (e) => e.wallets, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  @JoinColumn()
   user?: User;
 
   @Column({ type: 'int' })

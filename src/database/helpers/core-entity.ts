@@ -4,12 +4,12 @@ export class CoreEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   readonly id?: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ update: false })
   readonly createdAt?: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({})
   readonly updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  @DeleteDateColumn({ nullable: true })
   readonly deletedAt?: Date | null;
 }

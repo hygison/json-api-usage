@@ -4,9 +4,10 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   testApi() {
     return {
-      message: 'Success',
+      nodeEnv: process.env.NODE_ENV,
       nodeVersion: process.version,
-      documentation: '/docs',
+      message: 'Success',
+      documentation: '/swagger',
     };
   }
 }
