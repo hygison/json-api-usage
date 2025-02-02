@@ -135,3 +135,6 @@ dist
 
 # Swagger
 swagger.json
+
+# ERDIA
+erdiadb.json
