@@ -129,6 +129,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Keys
+private_key.pem
+public_key.pem
 
 # Docker
 /Docker

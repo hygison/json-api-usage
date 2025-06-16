@@ -27,7 +27,6 @@ async function bootstrap() {
   const port = configService.get('PORT');
   app.enableCors();
   await app.listen(port, () => {
-    // eslint-disable-next-line no-console
     console.log(`Application running at ${port}`);
   });
 }

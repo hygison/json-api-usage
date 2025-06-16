@@ -6,12 +6,14 @@ import { AppController } from '@/controllers/app.controller';
 import { AppService } from '@/services/app.service';
 import appConfig from '@/config/app.config';
 import { UserController } from '@/controllers/user.controller';
-import { Trip } from '@/database/entities/trip.entity';
-import { User } from '@/database/entities/user.entity';
-import { Wallet } from '@/database/entities/wallet.entity';
 import { DatabaseModule } from '@/modules/database.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ErrorInterceptor } from '@/interceptors/error.interceptor';
+import { User } from '@/database/entities/user.entity';
+import { JwtGuard } from '@/guards/jwt.guard';
+import { JwtService } from '@nestjs/jwt';
+import { AuthService } from '@/auth/auth.service';
+import { AuthController } from '@/auth/auth.controller';
 
 @Module({
   imports: [
@@ -19,9 +21,10 @@ import { ErrorInterceptor } from '@/interceptors/error.interceptor';
       isGlobal: true,
       load: [appConfig],
     }),
+    DatabaseModule,
     HttpModule,
     JsonApiModule.forRoot({
-      entities: [User, Wallet, Trip],
+      entities: [User],
       controllers: [UserController],
       providers: [Logger],
       imports: [DatabaseModule],
@@ -32,14 +35,20 @@ import { ErrorInterceptor } from '@/interceptors/error.interceptor';
       },
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthController],
   providers: [
     {
       provide: APP_FILTER,
       useClass: ErrorInterceptor,
     },
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
     AppService,
     Logger,
+    JwtService,
+    AuthService,
   ],
 })
 export class AppModule {}
