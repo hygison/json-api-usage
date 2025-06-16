@@ -1,3 +1,4 @@
+import { User } from '@/database/entities/user.entity';
 import { ClassSerializerInterceptor, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import {
@@ -14,7 +15,6 @@ import {
   PatchData,
   PostRelationshipData,
 } from 'json-api-nestjs';
-import { User } from '@/database/entities/user.entity';
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiBearerAuth()
 @JsonApi(User)
