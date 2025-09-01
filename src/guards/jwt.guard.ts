@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { JWT_VERIFY_OPTIONS } from '@/constants/jwt.constant';
-import { UserPrivate } from '@/database/entities/user-private.entity';
 import { IS_PUBLIC_KEY, REQUEST_USER_KEY } from '@/constants/meta.constant';
+import { UserPrivate } from '@/database/entities/user-private.entity';
 import { ActiveUserInterface } from '@/types/active-user';
 
 @Injectable()

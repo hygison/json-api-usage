@@ -1,5 +1,5 @@
-import { IS_PUBLIC_KEY } from '@/constants/meta.constant';
 import { SetMetadata, CustomDecorator } from '@nestjs/common';
+import { IS_PUBLIC_KEY } from '@/constants/meta.constant';
 
 /**
  * Decorator that sets the controller method to public.

@@ -1,19 +1,19 @@
 import { HttpModule } from '@nestjs/axios';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { JsonApiModule } from 'json-api-nestjs';
-import { AppController } from '@/controllers/app.controller';
-import { AppService } from '@/services/app.service';
-import appConfig from '@/config/app.config';
-import { UserController } from '@/controllers/user.controller';
-import { DatabaseModule } from '@/modules/database.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { ErrorInterceptor } from '@/interceptors/error.interceptor';
+import { JwtService } from '@nestjs/jwt';
+import { JsonApiModule } from 'json-api-nestjs';
+import { AuthController } from '@/auth/auth.controller';
+import { AuthService } from '@/auth/auth.service';
+import appConfig from '@/config/app.config';
+import { AppController } from '@/controllers/app.controller';
+import { UserController } from '@/controllers/user.controller';
 import { User } from '@/database/entities/user.entity';
 import { JwtGuard } from '@/guards/jwt.guard';
-import { JwtService } from '@nestjs/jwt';
-import { AuthService } from '@/auth/auth.service';
-import { AuthController } from '@/auth/auth.controller';
+import { ErrorInterceptor } from '@/interceptors/error.interceptor';
+import { DatabaseModule } from '@/modules/database.module';
+import { AppService } from '@/services/app.service';
 
 @Module({
   imports: [

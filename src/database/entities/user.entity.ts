@@ -1,5 +1,5 @@
 import { MaxLength } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { CoreEntity } from '@/database/helpers/core-entity';
 
 @Entity()

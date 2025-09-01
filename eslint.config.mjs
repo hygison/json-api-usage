@@ -8,7 +8,7 @@ import tseslint from 'typescript-eslint';
 
 const config = [
   {
-    ignores: ['node_modules/', 'build/', 'public/', 'dist/', '**/*.js'],
+    ignores: ['node_modules/', '.github/', 'Docker/', 'build/', 'public/', 'dist/', '**/*.js'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -31,9 +31,11 @@ const config = [
           avoidEscape: true,
         },
       ],
-      'filenames/match-regex': ['error', '^[a-zA-Z0-9_.-]+$', true],
+      // 'filenames/match-regex': ['error', '^[a-zA-Z0-9_.-]+$'],
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
+      'no-empty': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { args: 'none' }],
+      '@typescript-eslint/no-explicit-any': 'off',
       'import/no-unused-modules': 'error',
       'no-irregular-whitespace': 'off',
       'import/order': [

@@ -1,10 +1,10 @@
 import { Controller, Post, Get, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { ActiveUserInterface } from '@/types/active-user';
+import { AuthService } from '@/auth/auth.service';
 import { ActiveUser } from '@/decorators/active-user.decorator';
 import { Public } from '@/decorators/public.decorator';
 import { SignUpDto, SignInDto } from '@/dtos/auth.dto';
-import { AuthService } from './auth.service';
+import { ActiveUserInterface } from '@/types/active-user';
 
 @ApiTags('auth')
 @Controller('auth')

@@ -3,8 +3,8 @@ import { Exclude } from 'class-transformer';
 import { IsEmail, MaxLength } from 'class-validator';
 import { isNil } from 'lodash';
 import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { User } from '@/database/entities/user.entity';
 import { CoreEntity } from '@/database/helpers/core-entity';
-import { User } from './user.entity';
 
 @Entity()
 export class UserPrivate extends CoreEntity {

@@ -4,11 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as argon2 from 'argon2';
 import { Repository } from 'typeorm';
+import { JWT_SIGN_IN_OPTIONS } from '@/constants/jwt.constant';
 import { UserPrivate } from '@/database/entities/user-private.entity';
 import { User } from '@/database/entities/user.entity';
 import { SignInDto, SignUpDto } from '@/dtos/auth.dto';
 import { ActiveUserInterface } from '@/types/active-user';
-import { JWT_SIGN_IN_OPTIONS } from '@/constants/jwt.constant';
 
 @Injectable()
 export class AuthService {

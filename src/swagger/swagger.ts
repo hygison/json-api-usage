@@ -15,6 +15,6 @@ export const swaggerDocs = (app: INestApplication) => {
   };
   const document = SwaggerModule.createDocument(app, config, options);
   document.openapi = '3.1.0';
-  fs.writeFileSync(`swagger.json`, JSON.stringify(document, null, 2));
+  fs.writeFileSync('swagger.json', JSON.stringify(document, null, 2));
   SwaggerModule.setup('swagger', app, () => SwaggerModule.createDocument(app, config), {});
 };
