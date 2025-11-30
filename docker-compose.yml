@@ -40,7 +40,7 @@ services:
       retries: 3
       timeout: 3s
     volumes:
-      - './Docker/database/postgres/data:/var/lib/postgresql/data'
+      - './Docker/database/postgres:/var/lib/postgresql'
   adminer:
     container_name: ${DB_ADMIN_CONTAINER}
     image: adminer

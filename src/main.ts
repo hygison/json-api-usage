@@ -3,13 +3,21 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { AppModule } from '@/modules/app.module';
 import { TransformInterceptor } from '@/interceptors/transform.interceptor';
+import { AppModule } from '@/modules/app.module';
 import { swaggerDocs } from '@/swagger/swagger';
+import { json, urlencoded } from 'express';
+import { getBodyParserOptions } from '@nestjs/platform-express/adapters/utils/get-body-parser-options.util';
+import * as qs from 'qs';
 
 async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);
 
+  const maxSize = '250mb';
+
+  app.use(json(getBodyParserOptions(true, { limit: maxSize })));
+  app.use(urlencoded({ limit: maxSize, extended: true }));
+  app.set('query parser', (value: string) => qs.parse(value, { allowDots: true }));
   swaggerDocs(app);
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalPipes(
@@ -27,7 +35,6 @@ async function bootstrap() {
   const port = configService.get('PORT');
   app.enableCors();
   await app.listen(port, () => {
-    // eslint-disable-next-line no-console
     console.log(`Application running at ${port}`);
   });
 }

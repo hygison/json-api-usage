@@ -1,15 +1,23 @@
-import { BaseEntity, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { randomUUID } from 'crypto';
+import { BaseEntity, BeforeInsert, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 export class CoreEntity extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  readonly id?: string;
+  @PrimaryColumn('uuid')
+  id?: string;
 
   @CreateDateColumn({ update: false })
   readonly createdAt?: Date;
 
-  @UpdateDateColumn({})
+  @UpdateDateColumn()
   readonly updatedAt?: Date;
 
   @DeleteDateColumn({ nullable: true })
   readonly deletedAt?: Date | null;
+
+  @BeforeInsert()
+  private assignUuid() {
+    if (!this.id) {
+      this.id = randomUUID();
+    }
+  }
 }
