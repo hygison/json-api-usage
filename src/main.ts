@@ -3,12 +3,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { getBodyParserOptions } from '@nestjs/platform-express/adapters/utils/get-body-parser-options.util';
+import { json, urlencoded } from 'express';
+import * as qs from 'qs';
 import { TransformInterceptor } from '@/interceptors/transform.interceptor';
 import { AppModule } from '@/modules/app.module';
 import { swaggerDocs } from '@/swagger/swagger';
-import { json, urlencoded } from 'express';
-import { getBodyParserOptions } from '@nestjs/platform-express/adapters/utils/get-body-parser-options.util';
-import * as qs from 'qs';
 
 async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);

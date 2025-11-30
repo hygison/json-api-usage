@@ -13,8 +13,8 @@ import { User } from '@/database/entities/user.entity';
 import { JwtGuard } from '@/guards/jwt.guard';
 import { ErrorInterceptor } from '@/interceptors/error.interceptor';
 import { DatabaseModule } from '@/modules/database.module';
-import { AppService } from '@/services/app.service';
 import { AllowAnyPipe } from '@/pipes/allow-any.pipe';
+import { AppService } from '@/services/app.service';
 
 @Module({
   imports: [
