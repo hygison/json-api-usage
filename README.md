@@ -4,7 +4,8 @@ Using https://github.com/klerick/nestjs-json-api
 
 Make sure to download Docker before.
 
-- Create `.evn` as a copy of `.env.example`
+- Create `.env` as a copy of `.env.example`
+- Provide JWT keys either by keeping `private_key.pem` / `public_key.pem` next to the `.env` (matching the `JWT_*_PATH` variables) or by pasting the key contents into `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` with literal `\n` line breaks; the Docker image generates a throwaway key pair automatically, so replace those files for real deployments
 - run `make` and the containers will be build and the API will be available at port 3000
 
 # Generate Mermaid For Database

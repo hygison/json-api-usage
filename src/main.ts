@@ -32,7 +32,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  const port = configService.get('PORT');
+  const port = configService.get('APP_PORT');
   app.enableCors();
   await app.listen(port, () => {
     console.log(`Application running at ${port}`);

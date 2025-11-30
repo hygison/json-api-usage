@@ -1,57 +1,61 @@
 version: '3.9'
+
 services:
   app:
-    container_name: ${APP_CONTAINER}
-    image: app
-    restart: unless-stopped
-    command: sh -c "npm install --force && npm run start:dev"
+    container_name: ${APP_CONTAINER:-json-api-app}
     build:
       context: .
       dockerfile: Dockerfile
-      platforms:
-        - linux/arm64
-    volumes:
-      - ./:/usr/src/app
-      - ./:/node_modules
-    ports:
-      - ${PORT}:${PORT}
+      args:
+        APP_PORT: ${APP_PORT:-3000}
+    image: json-api-usage-app:latest
+    restart: unless-stopped
     env_file:
       - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - '${APP_PORT:-3000}:${APP_PORT:-3000}'
     depends_on:
       postgres:
         condition: service_healthy
+
   postgres:
-    container_name: ${DB_CONTAINER}
-    image: postgres:latest
+    container_name: ${DB_CONTAINER:-json-api-db}
+    image: postgres:16-alpine
     restart: unless-stopped
-    ports:
-      - ${DB_PORT}:${DB_PORT}
     env_file:
       - .env
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      TZ: ${TIME_ZONE}
+      TZ: ${TIME_ZONE:-UTC}
       POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=en_US.UTF-8'
+    ports:
+      - '${DB_PORT:-5432}:5432'
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
       interval: 5s
-      retries: 3
-      timeout: 3s
+      retries: 5
+      timeout: 5s
     volumes:
-      - './Docker/database/postgres:/var/lib/postgresql'
+      - postgres-data:/var/lib/postgresql/data
+
   adminer:
-    container_name: ${DB_ADMIN_CONTAINER}
+    container_name: ${DB_ADMIN_CONTAINER:-json-api-adminer}
     image: adminer
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     ports:
-      - '${DB_ADMIN_PORT}:8080'
+      - '${DB_ADMIN_PORT:-3307}:8080'
     environment:
       ADMINER_DEFAULT_SERVER: postgres
       ADMINER_DEFAULT_USERNAME: ${DB_USER}
       ADMINER_DEFAULT_PASSWORD: ${DB_PASSWORD}
       ADMINER_DESIGN: hydra
+
+volumes:
+  postgres-data:
