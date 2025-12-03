@@ -1,5 +1,7 @@
 include .env
 compose-file = -f docker-compose.yml
+TF_ENV_FILE ?= infra/terraform/.env.terraform
+TERRAFORM_DIR ?= infra/terraform
 BACKUP_DIR ?= Docker/backups
 TIMESTAMP := $(shell date +%Y%m%d%H%M%S)
 DB_DUMP_FILE ?= $(BACKUP_DIR)/db_dump_$(TIMESTAMP).sql
@@ -41,3 +43,23 @@ jwt:
 	@openssl rsa -pubout -in private_key.pem -out public_key.pem
 	$(call print_success, Congratulations, jwt created.)
 .PHONY:jwt
+
+tf-env-check:
+	@test -f $(TF_ENV_FILE) || (echo "Missing $(TF_ENV_FILE). Copy infra/terraform/.env.terraform.example and fill in the TF_VAR_* values." && exit 1)
+.PHONY: tf-env-check
+
+infra-init: tf-env-check
+	set -a && . $(TF_ENV_FILE) && set +a && terraform -chdir=$(TERRAFORM_DIR) init
+.PHONY: infra-init
+
+infra-plan: tf-env-check
+	set -a && . $(TF_ENV_FILE) && set +a && terraform -chdir=$(TERRAFORM_DIR) plan
+.PHONY: infra-plan
+
+infra-apply: tf-env-check
+	set -a && . $(TF_ENV_FILE) && set +a && terraform -chdir=$(TERRAFORM_DIR) apply
+.PHONY: infra-apply
+
+infra-destroy: tf-env-check
+	set -a && . $(TF_ENV_FILE) && set +a && terraform -chdir=$(TERRAFORM_DIR) destroy
+.PHONY: infra-destroy

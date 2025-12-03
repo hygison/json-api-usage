@@ -143,3 +143,10 @@ swagger.json
 erdiadb.json
 
 .DS_Store
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+infra/terraform/.terraform/
+infra/terraform/.env.terraform
