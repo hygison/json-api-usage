@@ -2,10 +2,15 @@ import { readFileSync } from 'fs';
 import { JwtModuleOptions, JwtSignOptions, JwtVerifyOptions } from '@nestjs/jwt';
 import 'dotenv/config';
 
-const secret = process.env.JWT_SECRET;
-const privateKey = readFileSync(process.env.JWT_PRIVATE_KEY_PATH, 'utf8');
-const publicKey = readFileSync(process.env.JWT_PUBLIC_KEY_PATH, 'utf8');
-const ttl = process.env.JWT_ACCESS_TOKEN_TTL;
+// Allow either path-based keys or inline PEM in env vars.
+const secret = process.env.JWT_SECRET ?? '';
+const privateKey = process.env.JWT_PRIVATE_KEY_PATH
+  ? readFileSync(process.env.JWT_PRIVATE_KEY_PATH, 'utf8')
+  : (process.env.JWT_PRIVATE_KEY ?? '');
+const publicKey = process.env.JWT_PUBLIC_KEY_PATH
+  ? readFileSync(process.env.JWT_PUBLIC_KEY_PATH, 'utf8')
+  : (process.env.JWT_PUBLIC_KEY ?? '');
+const ttl = process.env.JWT_ACCESS_TOKEN_TTL ?? '3600';
 
 export const JWT_VERIFY_OPTIONS: JwtVerifyOptions = {
   algorithms: ['RS256'],
@@ -22,6 +27,6 @@ export const JWT_MODULE_OPTIONS: JwtModuleOptions = {
   privateKey: privateKey,
   publicKey: publicKey,
   signOptions: {
-    expiresIn: parseInt(ttl),
+    expiresIn: parseInt(ttl, 10),
   },
 };

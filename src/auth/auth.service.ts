@@ -55,17 +55,28 @@ export class AuthService {
       throw new BadRequestException('Invalid email');
     }
 
+    if (!password) {
+      throw new BadRequestException('Password is required');
+    }
+
+    if (!user.password) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
     const isPasswordMatch = await argon2.verify(user.password, password);
     if (!isPasswordMatch) {
       throw new BadRequestException('Invalid password');
     }
 
-    return await this.generateAccessToken(user);
+    return await this.generateAccessToken(user as Partial<UserPrivate>);
   }
 
   async refreshToken(activeUser: ActiveUserInterface): Promise<{ accessToken: string }> {
     const userPrivate = await this.userPrivateRepository.findOne({ where: { userId: activeUser.userId } });
-    return this.generateAccessToken(userPrivate);
+    if (!userPrivate) {
+      throw new BadRequestException('User not found');
+    }
+    return this.generateAccessToken(userPrivate as Partial<UserPrivate>);
   }
 
   async generateAccessToken(userPrivate: Partial<UserPrivate>): Promise<{ accessToken: string }> {

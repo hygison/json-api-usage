@@ -1,0 +1,15 @@
+diff --git a/node_modules/json-api-nestjs/src/lib/modules/type-orm/orm-methods/patch-one/patch-one.js b/node_modules/json-api-nestjs/src/lib/modules/type-orm/orm-methods/patch-one/patch-one.js
+index 1234567..abcdefg 100644
+--- a/node_modules/json-api-nestjs/src/lib/modules/type-orm/orm-methods/patch-one/patch-one.js
++++ b/node_modules/json-api-nestjs/src/lib/modules/type-orm/orm-methods/patch-one/patch-one.js
+@@ -29,7 +29,10 @@ async function patchOne(id, inputData) {
+     }
+     if (attributes) {
+         const entityTarget = this.repository.manager.create(this.repository.target, attributes);
++        const primaryColumn = this.typeormUtilsService.currentPrimaryColumn;
+         for (const [props, val] of nestjs_shared_1.ObjectTyped.entries(entityTarget)) {
++            // Skip the primary key to avoid overwriting with a newly generated UUID
++            if (props === primaryColumn) continue;
+             result[props] = val;
+         }
+     }

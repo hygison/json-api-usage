@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-local}
       args:
         APP_PORT: ${APP_PORT:-3000}
     image: json-api-usage-app:latest
@@ -13,16 +14,19 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: production
+      ENV: ${ENV:-local}
     ports:
       - '${APP_PORT:-3000}:${APP_PORT:-3000}'
+    volumes:
+      - ${DEV_VOLUMES:-/dev/null}:/usr/src/app/src
+      - ./swagger.json:/usr/src/app/swagger.json
     depends_on:
       postgres:
         condition: service_healthy
 
   postgres:
     container_name: ${DB_CONTAINER:-json-api-db}
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     restart: unless-stopped
     env_file:
       - .env

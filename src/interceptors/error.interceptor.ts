@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common';
 import { isNil } from 'lodash';
+import { isDev, isLocal } from '@/constants/env.constant';
 
-const IS_LOCAL = true;
 @Catch()
 export class ErrorInterceptor implements ExceptionFilter {
   constructor() {}
@@ -32,13 +32,13 @@ export class ErrorInterceptor implements ExceptionFilter {
         },
         status: status,
         message: exception instanceof HttpException ? exception.message : defaultError.message,
+        ...((isLocal || isDev) && exception?.stack ? { stack: exception.stack } : {}),
       },
     };
 
     const removedKeysFromObject = JSON.parse(this.removeEnv(JSON.stringify(this.removeKeys(errorObject))));
-    const stringForLogs = IS_LOCAL
-      ? JSON.stringify(removedKeysFromObject, null, 2)
-      : JSON.stringify(removedKeysFromObject);
+    const stringForLogs =
+      isLocal || isDev ? JSON.stringify(removedKeysFromObject, null, 2) : JSON.stringify(removedKeysFromObject);
     const isError = status >= 500;
     if (isError) {
       this.logger.error(stringForLogs);
@@ -61,13 +61,15 @@ export class ErrorInterceptor implements ExceptionFilter {
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      Logger.error('Error removing keys from object in ErrorInterceptor', e);
+    }
 
     return obj;
   }
 
   private removeEnv(string: string) {
-    const env: { [key: string]: string } = process.env;
+    const env = process.env as { [key: string]: string | undefined };
     const keys = [
       'DB_PASSWORD',
       'SMTP_HOST',
@@ -79,11 +81,13 @@ export class ErrorInterceptor implements ExceptionFilter {
 
     try {
       for (const key in env) {
-        if (keys.includes(key)) {
-          string.replaceAll(env[key], this.generateAsteriskString());
+        if (keys.includes(key) && env[key]) {
+          string = string.replaceAll(env[key], this.generateAsteriskString());
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      Logger.error('Error removing env variables from string in ErrorInterceptor', e);
+    }
 
     return string;
   }
