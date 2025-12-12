@@ -1,4 +1,4 @@
-include .env
+-include .env
 compose-file = -f docker-compose.yml
 TF_ENV_FILE ?= infra/terraform/.env.terraform
 TERRAFORM_DIR ?= infra/terraform
@@ -10,6 +10,10 @@ up:
 	docker-compose up -V --build
 .PHONY:upf
 run:
+
+local:
+	BUILD_TARGET=local DEV_VOLUMES=./src docker-compose --env-file .env.local up -V --build
+.PHONY:local
 
 build:
 	docker compose ${compose-file} build --no-cache --force-rm
@@ -38,12 +42,19 @@ db-export:
 	@echo "Database exported to ${DB_DUMP_FILE}"
 .PHONY: db-export
 
+db-import:
+	docker exec -i ${DB_CONTAINER} env PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USER} -d ${DB_NAME} < Docker/db_dump.sql
+	@echo "Database imported from Docker/db_dump.sql"
+.PHONY: db-import
+
 jwt:
 	@openssl genpkey -algorithm RSA -out private_key.pem
 	@openssl rsa -pubout -in private_key.pem -out public_key.pem
 	$(call print_success, Congratulations, jwt created.)
 .PHONY:jwt
 
+
+# Deploy to GCP -> Terraform
 tf-env-check:
 	@test -f $(TF_ENV_FILE) || (echo "Missing $(TF_ENV_FILE). Copy infra/terraform/.env.terraform.example and fill in the TF_VAR_* values." && exit 1)
 .PHONY: tf-env-check
@@ -63,3 +74,26 @@ infra-apply: tf-env-check
 infra-destroy: tf-env-check
 	set -a && . $(TF_ENV_FILE) && set +a && terraform -chdir=$(TERRAFORM_DIR) destroy
 .PHONY: infra-destroy
+
+
+# Deploy to Mau -> AWS
+deploy-dev:
+	@echo "Cleaning dist folder..."
+	rm -rf dist
+	@echo "Loading .env.dev and deploying to Mau..."
+	cp .env.dev .env
+	mau deploy --dockerfile Dockerfile --target mau
+.PHONY: deploy-dev
+
+deploy-prod:
+	@echo "Cleaning dist folder..."
+	rm -rf dist
+	@echo "Loading .env.prod and deploying to Mau..."
+	cp .env.prod .env
+	mau deploy --dockerfile Dockerfile --target mau
+.PHONY: deploy-prod
+
+# Enter Mau container
+mau:
+	mau ssh my-app-name
+.PHONY: mau

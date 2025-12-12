@@ -4,6 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { isLocal } from '@/constants/env.constant';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -21,6 +22,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   retryAttempts: 10,
   retryDelay: 5000,
   namingStrategy: new SnakeNamingStrategy(),
+  ssl: isLocal ? false : { rejectUnauthorized: false },
 };
-
 export const AppDataSource = new DataSource(<PostgresConnectionOptions>typeOrmConfig);

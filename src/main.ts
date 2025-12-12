@@ -12,10 +12,17 @@ import { swaggerDocs } from '@/swagger/swagger';
 
 async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('v1');
 
   const maxSize = '250mb';
 
-  app.use(json(getBodyParserOptions(true, { limit: maxSize })));
+  const bodyParserOptions = getBodyParserOptions(true, { limit: maxSize });
+  app.use(
+    json({
+      ...bodyParserOptions,
+      type: ['application/json', 'application/vnd.api+json', 'application/*+json'],
+    }),
+  );
   app.use(urlencoded({ limit: maxSize, extended: true }));
   app.set('query parser', (value: string) => qs.parse(value, { allowDots: true }));
   swaggerDocs(app);

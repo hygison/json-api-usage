@@ -122,7 +122,7 @@ resource "google_sql_user" "app" {
 locals {
   base_app_env = {
     APP_PORT              = tostring(var.app_port)
-    NODE_ENV              = "production"
+                  = "production"
     DB_HOST               = google_sql_database_instance.primary.private_ip_address
     DB_PORT               = "5432"
     DB_USER               = var.sql_user
